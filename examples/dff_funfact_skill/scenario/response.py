@@ -51,7 +51,7 @@ FUNFACT_LIST = [
 ]
 
 
-def random_planet_fact(ctx: Context, actor: Actor, *args, **kwargs) -> str:
+def random_funfact_response(ctx: Context, actor: Actor, *args, **kwargs) -> str:
     fact, topic = random.sample(FUNFACT_LIST, 1)[0]
     question = "Would you like to hear another fun fact?"
     return f"{fact} {question}"

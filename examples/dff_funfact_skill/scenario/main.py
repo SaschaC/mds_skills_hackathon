@@ -1,11 +1,10 @@
 import df_engine.conditions as cnd
 from df_engine.core import Actor
 from df_engine.core.keywords import LOCAL, RESPONSE, TRANSITIONS
-import re
+
 
 import scenario.condition as loc_cnd
 import scenario.response as rsp
-import df_engine.labels as lbl
 
 plot = {
     "service": {
@@ -17,16 +16,12 @@ plot = {
         "start": {RESPONSE: ""},
         "fallback": {RESPONSE: "Sorry"},
     },
-    "planets": {
-        "node1": {
-            RESPONSE: "Which planet would you like to know about?",
+    "funfact": {
+        "random": {
+            RESPONSE: rsp.random_funfact_response,
             TRANSITIONS: {
-                lbl.forward: cnd.regexp(r'mars|venus|saturn',re.I)}
+                ("funfact", "random"): cnd.any([loc_cnd.random_funfact_condition, loc_cnd.another_funfact_condition])
             },
-        "node2": {
-            RESPONSE: rsp.random_planet_fact,
-            TRANSITIONS: {
-                lbl.repeat: cnd.regexp(r'mars|venus|saturn',re.I)}
         },
     },
 }
