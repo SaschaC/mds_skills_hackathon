@@ -1,8 +1,8 @@
-# dff-funfact-skill
+# dff-space-skill
 
 ## Description
 
-**dff-funfact-skill** is a simple service that can give random fun facts.
+**dff-space-skill** can generate random facts about the planets in our solar system, provide info on the Martian weather, and search for exoplanets.
 
 ## Quickstart
 
