@@ -38,6 +38,7 @@ Done:
 
 TODO:
  - Natural language expoplanet querying:
+  - Create list of possible query types
   - Further develop context free grammar for NL to XPath translation 
   - Create custom functions for more complex searches not supported by ElementTree package or use libxml2 package instead.
  - Develop dialogue flow to guide user queries. For example, adding the possibility to request more info for a given search result, save search results.
