@@ -17,8 +17,8 @@ TODO:
  - My skill will comprise 3 parts: random fact generation for the 8 planets in our solar system based on scraped web data, Mars weather information based on NASA API, exoplanet search based on NASA API and others.  
    - Step 1: data gathering, API search, conceptualization of the skills.
    - Step 2: developping dialogue flow for natural language queries in exoplanet search and Mars weather information.
-   - Step 3:  Implement search execution based natural language queries provided by user. 
-   - Step 4: Expand dialogue flow to customize presentation of serach results.
+   - Step 3:  Implement search execution based on natural language queries provided by user. 
+   - Step 4: Expand dialogue flow to customize presentation of search results.
    - Step 5: Implement different scenarios of search result presentation.
    - Step 6 (optional): Research methods for Natural language to database query conversion and implment one method.  
  
@@ -35,7 +35,21 @@ Done:
  - The assistant generates random facts for any of the 8 planets in our solar system based on the scraped Wikipedia data.
 
 # Week 2
-....
+
+TODO:
+ - Natural language expoplanet querying:
+  - Further develop context free grammar for NL to XPath translation 
+  - Create custom functions for more complex searches not supported by ElementTree package or use libxml2 package instead.
+ - Develop dialogue flow to guide user queries. For example, adding the possibility to request more info for a given search result, save search results.
+ - Start Mars Weather querying implementation.
+
+WIP:
+ - Work on context free grammar for exoplanet querying.
+
+Done:
+ - Familiarized myself with the [ElementTree](https://docs.python.org/3/library/xml.etree.elementtree.html) package
+ - Studied CFG implmentation on NLTK website
+ - I created a CFG prototype for simple exoplanet queries under ./scenarios
 
 # Week 3
 ....

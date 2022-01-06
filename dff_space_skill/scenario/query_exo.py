@@ -56,4 +56,3 @@ for query in queries:
     planet_names = [p.findtext('name') for p in planets]
     print(
         f'I found the following planet(s):{", ".join(planet_names)}\n')
-
