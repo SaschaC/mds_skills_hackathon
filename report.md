@@ -40,7 +40,6 @@ TODO:
  - Natural language expoplanet querying:
   - Create list of possible query types
   - Further develop context free grammar for NL to XPath translation 
-  - Create custom functions for more complex searches not supported by ElementTree package or use libxml2 package instead.
  - Develop dialogue flow to guide user queries. For example, adding the possibility to request more info for a given search result, save search results.
  - Start Mars Weather querying implementation.
 
@@ -48,7 +47,7 @@ WIP:
  - Work on context free grammar for exoplanet querying.
 
 Done:
- - Familiarized myself with the [ElementTree](https://docs.python.org/3/library/xml.etree.elementtree.html) package
+ - Familiarized myself with the [ElementTree](https://docs.python.org/3/library/xml.etree.elementtree.html) and [lxml](https://lxml.de/tutorial.html#elements-contain-text) package
  - Studied CFG implmentation on NLTK website
  - I created a CFG prototype for simple exoplanet queries under ./scenarios
 
