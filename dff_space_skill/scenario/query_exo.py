@@ -38,7 +38,7 @@ def get_names(elements):
 g = """
 % start S
 S[SEM=(?np + ?vp)] -> NP[SEM=?np] VP[SEM=?vp]
-VP[SEM=(?v + ?np)] -> TV[SEM=?v] NP[SEM=?np]
+VP[SEM=(?v + ?p)] -> TV[SEM=?v] NP[SEM=?p] | CMPLX-V[SEM=?v] PP[SEM=?p]
 NP[SEM=(?det + ?n)] -> Art[SEM=?det] NP[SEM=?n] | Int[SEM=?det] N[SEM=?n]
 NP[SEM=(?np + ?num)] -> NP[SEM=?np] PP[SEM=?num] | NP[SEM=?np] AP[SEM=?num]
 PP[SEM=(?p + ?num)] -> P[SEM=?p] NUM[SEM=?num] | P[SEM=?p] ADVP[SEM=?num] 
@@ -46,13 +46,18 @@ ADVP[SEM=(?adv + ?num)] -> CMPLX-ADV[SEM=?adv] NUM[SEM=?num]
 AP[SEM=(?a + ?num)] -> CMPLX-A[SEM=?a] NUM[SEM=?num]
 CMPLX-A[SEM=?a] -> A[SEM=?a] CONJ
 CMPLX-ADV[SEM=?adv] -> ADV[SEM=?adv] CONJ | P ADV[SEM=?adv]
+CMPLX-V[SEM=?part] -> AUX PART[SEM=?part]
+PART[SEM='[discoveryyear'] -> 'discovered'
 Int[SEM='.//'] -> 'which' | 'what'
+AUX -> 'were'
 TV[SEM=''] -> 'have' | 'possess'
 Art[SEM=''] -> 'a'
 NP[SEM='[mass'] -> 'mass'
 NP[SEM='[radius'] -> 'radius'
-N[SEM='planet'] -> 'planet' | 'planets'
+N[SEM='planet'] -> 'planets'
 P[SEM=''] -> 'of' |'at'
+P[SEM='<'] -> 'before'
+P[SEM='>'] -> 'after'
 CONJ[SEM=''] -> 'than'
 A[SEM='>'] -> 'bigger' | 'larger' | 'greater' 
 A[SEM='<'] -> 'smaller'
@@ -67,7 +72,7 @@ oec = etree.parse(gzip.GzipFile(fileobj=io.BytesIO(urllib.request.urlopen(url).r
 queries = ['what planets have a mass of 19.4','which planets have a mass of 19.4',
 'what planets have a radius of 0.188','which planets have a mass of at least 19.4',
 'which planets have a mass of at most 0.001','which planets have a mass smaller than 0.001',
-'which planets have a mass greater than 19.4']
+'which planets have a mass greater than 19.4','what planets were discovered before 2010']
 for query in queries:
     print(f'NL query: {query}')
     q_xpath = translate_query(query,g)
