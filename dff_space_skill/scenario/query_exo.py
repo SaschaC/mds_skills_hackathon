@@ -40,27 +40,36 @@ g = """
 S[SEM=(?np + ?vp)] -> NP[SEM=?np] VP[SEM=?vp]
 VP[SEM=(?v + ?np)] -> TV[SEM=?v] NP[SEM=?np]
 NP[SEM=(?det + ?n)] -> Art[SEM=?det] NP[SEM=?n] | Int[SEM=?det] N[SEM=?n]
-NP[SEM=(?np + ?pp)] -> NP[SEM=?np] PP[SEM=?pp]
-PP[SEM=(?p + ?num)] -> P[SEM=?p] NUM[SEM=?num] | P[SEM=?p] AP[SEM=?num]
+NP[SEM=(?np + ?num)] -> NP[SEM=?np] PP[SEM=?num] | NP[SEM=?np] AP[SEM=?num]
+PP[SEM=(?p + ?num)] -> P[SEM=?p] NUM[SEM=?num] | P[SEM=?p] ADVP[SEM=?num] 
+ADVP[SEM=(?adv + ?num)] -> CMPLX-ADV[SEM=?adv] NUM[SEM=?num] 
 AP[SEM=(?a + ?num)] -> CMPLX-A[SEM=?a] NUM[SEM=?num]
-CMPLX-A[SEM=(?p + ?a)] -> P[SEM=?p] A[SEM=?a] 
+CMPLX-A[SEM=?a] -> A[SEM=?a] CONJ
+CMPLX-ADV[SEM=?adv] -> ADV[SEM=?adv] CONJ | P ADV[SEM=?adv]
 Int[SEM='.//'] -> 'which' | 'what'
-TV[SEM=''] -> 'have'
+TV[SEM=''] -> 'have' | 'possess'
 Art[SEM=''] -> 'a'
 NP[SEM='[mass'] -> 'mass'
 NP[SEM='[radius'] -> 'radius'
 N[SEM='planet'] -> 'planet' | 'planets'
 P[SEM=''] -> 'of' |'at'
-A[SEM='>'] -> 'least'
-A[SEM='<'] -> 'most'
+CONJ[SEM=''] -> 'than'
+A[SEM='>'] -> 'bigger' | 'larger' | 'greater' 
+A[SEM='<'] -> 'smaller'
+ADV[SEM='<'] -> 'less' | 'most'
+ADV[SEM='>'] -> 'more' | 'least'
 NUM[SEM="=#NUM#]"] -> '#NUM#'
 """
 # get xml exoplanet database:
 url = "https://github.com/OpenExoplanetCatalogue/oec_gzip/raw/master/systems.xml.gz"
 oec = etree.parse(gzip.GzipFile(fileobj=io.BytesIO(urllib.request.urlopen(url).read())))
 
-queries = ['what planets have a mass of 19.4','which planets have a mass of 19.4','what planets have a radius of 0.188','which planets have a mass of at least 19.4','which planets have a mass of at most 0.001']
+queries = ['what planets have a mass of 19.4','which planets have a mass of 19.4',
+'what planets have a radius of 0.188','which planets have a mass of at least 19.4',
+'which planets have a mass of at most 0.001','which planets have a mass smaller than 0.001',
+'which planets have a mass greater than 19.4']
 for query in queries:
+    print(f'NL query: {query}')
     q_xpath = translate_query(query,g)
     # query database with Xpath query
     planets = oec.xpath(q_xpath)
