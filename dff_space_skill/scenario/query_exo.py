@@ -77,7 +77,7 @@ queries = ['what planets have a mass of 19.4','which planets have a mass of 19.4
 'which planets have a mass greater than 19.4','what planets were discovered before 2001',
 'what planets were discovered after 2021','which planets have a mass smaller than 0.001',
 'which planets have a mass smaller than 0.001 and a radius of less than 0.188',
-'what planets have a mass of at most 0.001 and a radius of at least 0.188']
+'what planets have a mass larger than 0.001 and a radius of at least 0.188']
 for query in queries:
     print(f'NL query: {query}')
     q_xpath = translate_query(query,g)
