@@ -52,7 +52,21 @@ Done:
  - I created a CFG prototype for simple exoplanet queries under ./scenarios
 
 # Week 3
-....
+
+TODO:
+
+ - Develop dialogue flow to guide user queries. For example, adding the possibility to request more info for a given search result, save search results.
+ - Start Mars Weather querying implementation.
+ - Develop context free grammar with semantic lambda calculus features for NL queries
+ - Convert data tables for SQL queries
+
+WIP:
+- I have spent the week mainly looking into alternative representations for NL queries, most recently into lambda calculus semantic representations.
+
+Done:
+ - Included conjunctive queries (e.g. planet with radius > x and mass < y) in the CFG.
+ - Created a list of possible queries I want to be able to handle.
+
 
 # Week 4
 ....
