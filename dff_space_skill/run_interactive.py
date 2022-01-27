@@ -34,7 +34,14 @@ def turn_handler(
 
 if __name__ == "__main__":
     ctx = {}
-    input("\nHi, you can ask me for fun facts about the 8 planets in our solar system.\n")
+    input("""\nHi, I help you search for exoplanets. 
+You can ask me things in English and German. For example, 'Which planets that were discovered before 2010 have a radius of at least 3 and a mass of at most 4', 
+'Welche Planeten, die vor 2010 entdeckt wurden, haben einen Radius von mindestens 3 und eine Masse von maximal 4'.
+The parameters that I understand are radius (de: 'radius'), mass (de: 'Masse'), age (de: 'Alter'), and discovered (de: 'entdeckt'). For more info on what the parameters mean visit:
+
+Press an key to get started.
+
+""")
     while True:
         in_request = input("\nType your answer: ")
         st_time = time.time()
