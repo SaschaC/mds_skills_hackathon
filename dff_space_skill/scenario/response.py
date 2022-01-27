@@ -21,7 +21,8 @@ def find_planets(query,gram):
         trees = list(parser.parse(query.split()))
     except ValueError:
         return('QueryError',0,0,0)
-
+    if not trees:
+        return('QueryError',0,0,0)
     for i,t in enumerate(trees):
         answer = trees[i].label()['SEM']
         language = trees[i].label()['L']
@@ -30,8 +31,9 @@ def find_planets(query,gram):
         for tag in number_dict.keys():
             answer = re.sub(tag,number_dict[tag],answer)
         subqueries = answer.split(';')
+        planet_names = []
         if are_wellformed(subqueries):
-            planet_names = []
+            
             found = False
             try:
                 for q in subqueries:

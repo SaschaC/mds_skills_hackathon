@@ -31,7 +31,6 @@ def turn_handler(
         print(f"{in_request} -> {out_response}")
     return out_response, ctx
 
-
 if __name__ == "__main__":
     ctx = {}
     input("""\nHi, I help you search for exoplanets. 
