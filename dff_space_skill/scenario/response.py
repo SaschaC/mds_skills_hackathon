@@ -39,14 +39,17 @@ def find_planets(query,gram):
                     if planets:
                         found = True
                     planet_names.append(get_names(planets))
+                xml_queries=f'XML Queries:{subqueries}'
                 if found:
-                    xml_queries=f'XML Queries:{subqueries}'
                     return (planet_names,language,normalized_query,xml_queries)
                 else:
                     continue
             except:
                 continue
-    return ('QueryError',0,0,0)
+    if not planet_names:
+        return ('QueryError',0,0,0)
+    else:
+        return (planet_names,language,normalized_query,xml_queries)
 
 def serialize(query):
     number_dict = dict()

@@ -104,7 +104,45 @@ Would you like more info on one of these planets?
 """
     ),
     ("no", "Would you like to try another search?"),
-    ("no","OK bye!")]
+    ("no","OK bye!")],
+[("hi", "Please enter your search query!"),("which planets have a mass of 1 and which planets were discovered before 2001 and which planets have a mass of 1 and were discovered before 2001?",
+"""
+
+Normalized NL Query: which planets have a mass of #num0 and which planets were discovered before #num1 and which planets have a mass of #num2 and were discovered before #num3
+XML Queries:['.//planet[mass=1]', './/planet[discoveryyear<=2001]', './/planet[mass=1 and discoveryyear<=2001]']
+
+Here are 6 planets I found for part 1 of the query 'which planets have a mass of 1 and which planets were discovered before 2001 and which planets have a mass of 1 and were discovered before 2001?':
+
+HD 219415 b, HD 75784 b, Kepler-44 b, Jupiter, WASP-129 b, WASP-190 b
+
+Here are 66 planets I found for part 2 of the query 'which planets have a mass of 1 and which planets were discovered before 2001 and which planets have a mass of 1 and were discovered before 2001?':
+
+16 Cygni B b, 47 UMa b, 47 UMa c, 51 Peg b, 55 Cancri b, 70 Vir b, BD-10 3166 b, eps Eridani b, Gliese 3021 A b, Gliese 86 b, Gliese 876 b, Gliese 876 c, HD 10697 b, HD 114762 b, HD 114783 b, HD 12661 b, HD 130322 b, HD 134987 b, HD 142 A b, HD 16141 A b, HD 168443 b, HD 168443 c, HD 169830 b, HD 177830 A b, HD 178911 B b, HD 179949 b, HD 187123 b, HD 192263 b, HD 195019 A b, HD 19994 A b, HD 209458 b, HD 210277 b, HD 213240 A b, HD 217107 b, HD 222582 A b, HD 23079 b, HD 27442 A b, HD 28185 b, HD 37124 b, HD 38529 A b, HD 39091 b, HD 4203 b, HD 4208 b, HD 46375 A b, HD 52265 b, HD 6434 b, HD 68988 b, HD 75289 A b, HD 80606 b, HD 89744 A b, HD 92788 b, HR 810 b, ITG 15B, mu Arae b, PSR 1257+12 A, PSR 1257+12 B, PSR 1257+12 C, PSR B1620-26 b, Rho Coronae Borealis b, Uranus, Neptune, Pluto, tau Boo A b, Upsilon Andromedae A b, Upsilon Andromedae A c, Upsilon Andromedae A d
+
+I did not find any planet for part 3 of the query 'which planets have a mass of 1 and which planets were discovered before 2001 and which planets have a mass of 1 and were discovered before 2001?'.
+
+
+Would you like more info on one of these planets?
+"""
+    ),
+    ("no", "Would you like to try another search?"),
+    ("no","OK bye!")],
+[("hi", "Please enter your search query!"),
+    ("Planeten mit einem Radius von maximal 0.05","""
+
+Normalized NL Query: planeten mit einem radius von maximal #num0
+XML Queries:['(.//planet[radius<=0.05])[position()<=count(//*)]']
+
+Ich habe die folgenden 13 Planeten gefunden für die Anfrage 'Planeten mit einem Radius von maximal 0.05:'
+
+Kepler-102 b, KOI-115.03, Kepler-1308 b, Kepler-37 b, Kepler-444 b, Kepler-444 c, Kepler-444 d, Kepler-444 e, Kepler-62 c, Kepler-138 b, Mercury, Mars, Pluto
+
+Möchtest du mehr über einen dieser Planeten erfahren?
+"""
+    ),
+    ("nein", "Möchtest du eine neue Suche starten?"),
+    ("nein","OK bye!")
+    ]
 ]
 
 def run_test():
