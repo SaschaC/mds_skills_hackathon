@@ -2,7 +2,7 @@ import re
 
 from df_engine.core import Context
 
-yes_regexp = re.compile(r"\byes\b",re.I)
+yes_regexp = re.compile(r"(\b|^)(yes|ja\b)(\b|$)",re.I)
 
 
 def yes_intent(ctx: Context):
@@ -10,7 +10,7 @@ def yes_intent(ctx: Context):
     return ctx
 
 
-no_regexp = re.compile(r"\bno\b",re.I)
+no_regexp = re.compile(r"(\b|^)(no|nein)(\b|$)",re.I)
 
 
 def no_intent(ctx: Context):

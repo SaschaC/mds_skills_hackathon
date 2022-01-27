@@ -1,51 +1,11 @@
-import random
 import re
 from df_engine.core import Actor, Context
-from scenario.condition import PLANET_COMPILED_PATTERN
 from scenario.qcfg import g 
-import json
-import os
-from nltk import grammar, parse
-import nltk,urllib.request, gzip, io
 from nltk import grammar, parse
 import re
 from lxml import etree
-
-FACT_LIST = dict()
-PLANET = "mars"
-
-data_dir = os.path.abspath(os.path.join(os.path.dirname(__file__),os.pardir,'data'))
-wiki_json = os.path.join(data_dir,'planets_wiki.json')
-with open(wiki_json) as inf:
-    wiki_data = json.load(inf)
-
-url = "https://github.com/OpenExoplanetCatalogue/oec_gzip/raw/master/systems.xml.gz"
-oec = etree.parse(gzip.GzipFile(fileobj=io.BytesIO(urllib.request.urlopen(url).read())))
-gram = grammar.FeatureGrammar.fromstring(g)
-
-for planet,summary in wiki_data.items():
-    FACT_LIST[planet] = [sentence + '.' for sentence in summary.split('.')]
-
-def random_planet_fact(ctx: Context, actor: Actor, *args, **kwargs) -> str:
-    global PLANET
-    request = ctx.last_request
-    try:
-        PLANET = PLANET_COMPILED_PATTERN.findall(request)[0].lower()
-        fact = random.sample(FACT_LIST[PLANET], 1)[0]
-        question = f"Would you like to hear another fun fact about {PLANET}?"
-        return f"{fact}\n{question}"
-    except IndexError:
-        pass
-        
-def repeat_fact(ctx: Context, actor: Actor, *args, **kwargs) -> str:
-    global PLANET
-    try:
-        fact = random.sample(FACT_LIST[PLANET], 1)[0]
-        question = f"Would you like to hear another fun fact about {PLANET}?"
-        return f"{fact}\n{question}"
-    except IndexError:
-        pass
-
+import urllib.request, gzip, io
+import scenario.config as config
 
 def find_planets(query,gram):
     # remove numbers from query and substitute by '#NUM#'
@@ -58,7 +18,7 @@ def find_planets(query,gram):
     try:
         trees = list(parser.parse(query.split()))
     except ValueError:
-        return('You used some words I do not understand.')
+        return('QueryError',0)
 
     for i,t in enumerate(trees):
         answer = trees[i].label()['SEM']
@@ -79,7 +39,7 @@ def find_planets(query,gram):
                 return (planet_names,language)
             except:
                 continue
-    return 'XPathEvalError'
+    return ('QueryError',0)
 
 def serialize(query):
     number_dict = dict()
@@ -114,67 +74,111 @@ def get_names(elements):
 
 def give_response(planet_names,query,language):
     if language == 'de':
-        give_de_response(planet_names,query)
+        response = give_de_response(planet_names,query)
     else:
-        give_en_response(planet_names,query)
+        response = give_en_response(planet_names,query)
+    return response
 
 def give_en_response(planet_names,query):
     if len(planet_names) == 1:
         if len(planet_names[0]) == 1:
-            return(
-            f"I found the following {len(planet_names[0])} planet for the query '{query}:'\n{', '.join(planet_names[0])}\n"
-            )
+            config.PLANET_FOUND = True
+            return f"I found the following {len(planet_names[0])} planet for the query '{query}:'\n{', '.join(planet_names[0])}\n"
+            
         elif len(planet_names[0]) > 1:
-            return(
-            f"I found the following {len(planet_names[0])} planet(s) for the query '{query}:'\n{', '.join(planet_names[0])}\n"
-            )
+            config.PLANET_FOUND = True
+            return f"I found the following {len(planet_names[0])} planet(s) for the query '{query}:'\n{', '.join(planet_names[0])}\n"
+            
         else:
-            return(f"I did not find any planet for the query '{query}'.\n"
-            )
+            return f"I did not find any planet for the query '{query}'.\n"
+            
     elif len(planet_names) > 1:
         for sqi,names in enumerate(planet_names):
             if len(names) == 1:
-                return(
-                f"Here is 1 planet I found for part {sqi} of the query '{query}:'\n{names[0]}\n"
-                )
+                config.PLANET_FOUND = True
+                return f"Here is 1 planet I found for part {sqi} of the query '{query}:'\n{names[0]}\n"
+                
             elif len(names) > 1:
-                return(
-                f"Here are {len(names)} planets I found for part {sqi} of the query '{query}':\n{', '.join(names)}\n"
-                )
+                config.PLANET_FOUND = True
+                return f"Here are {len(names)} planets I found for part {sqi} of the query '{query}':\n{', '.join(names)}\n"
+                
             else:
-                return(f"I did not find any planet for part {sqi} of the query '{query}'.\n"
-                )
+                return f"I did not find any planet for part {sqi} of the query '{query}'.\n"
+                
 
 def give_de_response(planet_names,query):
     if len(planet_names) == 1:
         if len(planet_names[0]) == 1:
-            return(
-            f"Ich habe den folgenden Planeten gefunden für die Anfrage '{query}'\n:{', '.join(planet_names[0])}\n"
-            )    
+            config.PLANET_FOUND = True
+            return f"Ich habe den folgenden Planeten gefunden für die Anfrage '{query}:'\n{', '.join(planet_names[0])}\n"
+            
         elif len(planet_names[0]) > 1:
-            return(
-            f"Ich habe die folgenden {len(planet_names[0])} Planeten gefunden für die Anfrage '{query}'\n:{', '.join(planet_names[0])}\n"
-            )
+            config.PLANET_FOUND = True
+            return f"Ich habe die folgenden {len(planet_names[0])} Planeten gefunden für die Anfrage '{query}:'\n{', '.join(planet_names[0])}\n"
         else:
-            return(f"Ich habe keine Planeten gefunden für die Anfrage '{query}'\n"
-            )
+            return f"Ich habe keine Planeten gefunden für die Anfrage '{query}'\n"
     elif len(planet_names) > 1:
         for sqi,names in enumerate(planet_names):
             if len(names) == 1:
-                return(
-                f"Hier ist 1 Planet, den ich für Teil {sqi} der Anfrage '{query}' gefunden habe:\n{names[0]}\n"
-                )
+                config.PLANET_FOUND = True
+                return f"Hier ist 1 Planet, den ich für Teil {sqi} der Anfrage '{query}' gefunden habe:\n{names[0]}\n"
             elif len(names) > 1:
-                return(
-                f"Hier sind {len(names)} Planeten, die ich für Teil {sqi} der Anfrage '{query}' gefunden habe:\n{', '.join(names)}\n"
-                )
-            else:
-                return(f"Ich habe keine Planeten für Teil {sqi} der Anfrage '{query}' gefunden.\n"
-                )
-def process_query(ctx: Context, actor: Actor, *args, **kwargs) -> str:
-    QUERY = ctx.last_request
-    planet_names,language = find_planets(QUERY[0],gram)
-    if planet_names == 'XPathEvalError':
-        return(f"I did not understand the query '{QUERY}'.\n")
+                config.PLANET_FOUND = True
+                return f"Hier sind {len(names)} Planeten, die ich für Teil {sqi} der Anfrage '{query}' gefunden habe:\n{', '.join(names)}\n"
+                
+            else: 
+                return f"Ich habe keine Planeten für Teil {sqi} der Anfrage '{query}' gefunden.\n"
+
+gram = grammar.FeatureGrammar.fromstring(g)
+url = "https://github.com/OpenExoplanetCatalogue/oec_gzip/raw/master/systems.xml.gz"
+oec = etree.parse(gzip.GzipFile(fileobj=io.BytesIO(urllib.request.urlopen(url).read())))
+
+speech_acts = {'another_search':{'de':'Möchtest du eine neue Suche starten?','en':'Would you like to try another search?'},
+'no_understand':{'de':'Ich habe die diese Anfrage nicht verstanden:','en':'I did not understand the query'},
+'spelling':{'de':'Entschuldige, bitte achte auf korrekte Rechtschreibung. Drücke eine Taste, um es erneut zu versuchen.','en':'Sorry, please spell correctly. Press any key to try again.'},
+'more_info':{'de':'Möchtest du mehr über einen dieser Planeten erfahren?','en':'Would you like more info on one of these planets?'},
+'initiate':{'de':'Bitte gib deine Anfrage ein.','en':'Please enter your search query!'},
+'follow_up':{'de':'OK, über welchen Planeten?','en':'Alright, for which planet?'},
+'fail':{'de':'Oh, hier ist etwas schief gelaufen. Drücke eine Taste, um von Vorne zu beginnen.','en':'Oh, something went wrong. Press any key to start from the beginning.'}}
+
+def fail(ctx: Context, actor: Actor, *args, **kwargs):
+    return speech_acts['fail'][config.LANGUAGE]
+
+def initiate(ctx: Context, actor: Actor, *args, **kwargs):
+    return speech_acts['initiate'][config.LANGUAGE]
+
+def follow_up(ctx: Context, actor: Actor, *args, **kwargs):
+    return speech_acts['follow_up'][config.LANGUAGE]
+
+def another_search(ctx: Context, actor: Actor, *args, **kwargs):
+    return speech_acts['another_search'][config.LANGUAGE]
+
+def process_query(ctx: Context, actor: Actor, *args, **kwargs):
+    config.PLANET_FOUND = False
+    query = ctx.last_request
+    planet_names,language = find_planets(query,gram)
+    if language:
+        config.LANGUAGE = language
+    if planet_names == 'QueryError':
+        response = speech_acts['no_understand'][config.LANGUAGE]
+        question = question = speech_acts['another_search'][config.LANGUAGE]
+        return f"{response} '{query}'. {question}\n"
     else:
-        return give_response(planet_names,QUERY[0],language)
+        response = give_response(planet_names,query,language)
+        if config.PLANET_FOUND:
+            question = speech_acts['more_info'][config.LANGUAGE]
+        else:
+            question = speech_acts['another_search'][config.LANGUAGE]
+        return f'{response}\n{question}'
+
+def planet_description(ctx: Context, actor: Actor, *args, **kwargs):
+    planet = ctx.last_request
+    try:
+        description = oec.xpath(f'.//planet[name="{planet}"]/description')[0].text
+        config.SPELLING_CORRECT = True
+        question = speech_acts['another_search'][config.LANGUAGE]
+        return f'{description}\n\n{question}'
+    except:
+        config.SPELLING_CORRECT = False
+        response = speech_acts['spelling'][config.LANGUAGE]
+        return response

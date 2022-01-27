@@ -1,26 +1,25 @@
 import logging
 import re
-
 from df_engine.core import Actor, Context
+import scenario.config as config
 
-
-PLANET_COMPILED_PATTERN = re.compile(
-    r"earth|venus|mars|mercury|jupiter|uranus|saturn|neptune",
-    re.IGNORECASE,
-)
 
 logger = logging.getLogger(__name__)
 
-
-def planet_condition(ctx: Context, actor: Actor, *args, **kwargs) -> bool:
-    request = ctx.last_request
-    return bool(PLANET_COMPILED_PATTERN.search(request))
-
-
-def another_funfact_condition(ctx: Context, actor: Actor, *args, **kwargs) -> bool:
-    request = ctx.last_request
+def yes_intent_condition(ctx: Context, actor: Actor, *args, **kwargs) -> bool:
     return bool(ctx.misc.get("yes_intent"))
 
-def different_funfact_condition(ctx: Context, actor: Actor, *args, **kwargs) -> bool:
-    request = ctx.last_request
+def no_intent_condition(ctx: Context, actor: Actor, *args, **kwargs) -> bool:
     return bool(ctx.misc.get("no_intent"))
+
+def planet_found_condition(ctx: Context, actor: Actor, *args, **kwargs) -> bool:
+    return bool(config.PLANET_FOUND)
+
+def planet_not_found_condition(ctx: Context, actor: Actor, *args, **kwargs) -> bool:
+    return bool(not config.PLANET_FOUND)
+
+def spelling_correct_condition(ctx: Context, actor: Actor, *args, **kwargs) -> bool:
+    return bool(config.SPELLING_CORRECT)
+
+def spelling_not_correct_condition(ctx: Context, actor: Actor, *args, **kwargs) -> bool:
+    return bool(not config.SPELLING_CORRECT)
