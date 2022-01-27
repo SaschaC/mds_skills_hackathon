@@ -105,6 +105,21 @@ Would you like more info on one of these planets?
     ),
     ("no", "Would you like to try another search?"),
     ("no","OK bye!")],
+[("hi", "Please enter your search query!"),("Show me 3 planets that were discovered before 2020 and that have a mass of at least 2 with an age of maximally 5.",
+"""
+
+Normalized NL Query:  #num0 planets that were discovered before #num1 and that have a mass of at least #num2 with an age of maximally #num3
+XML Queries:['(.//planet[discoveryyear<=2020 and mass>=2][age<=5.])[position()<=3]']
+
+I found the following 3 planets for the query 'Show me 3 planets that were discovered before 2020 and that have a mass of at least 2 with an age of maximally 5.':
+
+HD 100546 b, SDSS J1110+0116, SIMP0136+0933
+
+Would you like more info on one of these planets?
+"""
+    ),
+    ("no", "Would you like to try another search?"),
+    ("no","OK bye!")],
 [("hi", "Please enter your search query!"),("which planets have a mass of 1 and which planets were discovered before 2001 and which planets have a mass of 1 and were discovered before 2001?",
 """
 
