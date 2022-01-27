@@ -1,5 +1,7 @@
 import re
 from df_engine.core import Actor, Context
+from langcodes import normalize_characters
+from torch import norm, normal
 from scenario.qcfg import g 
 from nltk import grammar, parse
 import re
@@ -30,13 +32,18 @@ def find_planets(query,gram):
         subqueries = answer.split(';')
         if are_wellformed(subqueries):
             planet_names = []
+            found = False
             try:
                 for q in subqueries:
                     planets = oec.xpath(q)
+                    if planets:
+                        found = True
                     planet_names.append(get_names(planets))
-                xml_queries=f'XML Queries:{subqueries}'
-                #print(f'Tree number: {i}')
-                return (planet_names,language,normalized_query,xml_queries)
+                if found:
+                    xml_queries=f'XML Queries:{subqueries}'
+                    return (planet_names,language,normalized_query,xml_queries)
+                else:
+                    continue
             except:
                 continue
     return ('QueryError',0,0,0)
@@ -83,51 +90,51 @@ def give_en_response(planet_names,query):
     if len(planet_names) == 1:
         if len(planet_names[0]) == 1:
             config.PLANET_FOUND = True
-            return f"I found the following {len(planet_names[0])} planet for the query '{query}:'\n\n{', '.join(planet_names[0])}\n"
-            
+            return f"I found the following {len(planet_names[0])} planet for the query '{query}':\n\n{', '.join(planet_names[0])}\n"
         elif len(planet_names[0]) > 1:
             config.PLANET_FOUND = True
-            return f"I found the following {len(planet_names[0])} planet(s) for the query '{query}:'\n\n{', '.join(planet_names[0])}\n"
+            return f"I found the following {len(planet_names[0])} planets for the query '{query}':\n\n{', '.join(planet_names[0])}\n"
             
         else:
-            return f"I did not find any planet for the query '{query}'.\n"
-            
+            return f"I did not find any planet for the query '{query}'.\n"   
     elif len(planet_names) > 1:
+        response = ""
         for sqi,names in enumerate(planet_names):
             if len(names) == 1:
                 config.PLANET_FOUND = True
-                return f"Here is 1 planet I found for part {sqi} of the query '{query}:'\n{names[0]}\n\n"
+                response += f"Here is 1 planet I found for part {sqi + 1} of the query '{query}':\n\n{names[0]}\n\n"
                 
             elif len(names) > 1:
                 config.PLANET_FOUND = True
-                return f"Here are {len(names)} planets I found for part {sqi} of the query '{query}':\n\n{', '.join(names)}\n"
+                response += f"Here are {len(names)} planets I found for part {sqi + 1} of the query '{query}':\n\n{', '.join(names)}\n\n"
                 
             else:
-                return f"I did not find any planet for part {sqi} of the query '{query}'.\n"
-                
+                response += f"I did not find any planet for part {sqi + 1} of the query '{query}'.\n\n"
+        return response
 
 def give_de_response(planet_names,query):
     if len(planet_names) == 1:
         if len(planet_names[0]) == 1:
             config.PLANET_FOUND = True
-            return f"Ich habe den folgenden Planeten gefunden für die Anfrage '{query}:'\n\n{', '.join(planet_names[0])}\n"
-            
+            return f"Ich habe den folgenden Planeten gefunden für die Anfrage '{query}':\n\n{', '.join(planet_names[0])}\n"
         elif len(planet_names[0]) > 1:
             config.PLANET_FOUND = True
             return f"Ich habe die folgenden {len(planet_names[0])} Planeten gefunden für die Anfrage '{query}:'\n\n{', '.join(planet_names[0])}\n"
         else:
             return f"Ich habe keine Planeten gefunden für die Anfrage '{query}'\n"
     elif len(planet_names) > 1:
+        response = ""
         for sqi,names in enumerate(planet_names):
             if len(names) == 1:
                 config.PLANET_FOUND = True
-                return f"Hier ist 1 Planet, den ich für Teil {sqi} der Anfrage '{query}' gefunden habe:\n\n{names[0]}\n"
+                response += f"Hier ist 1 Planet, den ich für Teil {sqi + 1} der Anfrage '{query}' gefunden habe:\n\n{names[0]}\n\n"
             elif len(names) > 1:
                 config.PLANET_FOUND = True
-                return f"Hier sind {len(names)} Planeten, die ich für Teil {sqi} der Anfrage '{query}' gefunden habe:\n\n{', '.join(names)}\n"
+                response += f"Hier sind {len(names)} Planeten, die ich für Teil {sqi + 1} der Anfrage '{query}' gefunden habe:\n\n{', '.join(names)}\n\n"
                 
             else: 
-                return f"Ich habe keine Planeten für Teil {sqi} der Anfrage '{query}' gefunden.\n"
+                response += f"Ich habe keine Planeten für Teil {sqi + 1} der Anfrage '{query}' gefunden.\n\n"
+        return response
 
 gram = grammar.FeatureGrammar.fromstring(g)
 url = "https://github.com/OpenExoplanetCatalogue/oec_gzip/raw/master/systems.xml.gz"
@@ -169,7 +176,7 @@ def process_query(ctx: Context, actor: Actor, *args, **kwargs):
             question = speech_acts['more_info'][config.LANGUAGE]
         else:
             question = speech_acts['another_search'][config.LANGUAGE]
-        return f'\n\n{normalized_query}\n{xml_queries}\n\n{response}\n{question}'
+        return f'\n\n{normalized_query}\n{xml_queries}\n\n{response}\n{question}\n'
 
 def planet_description(ctx: Context, actor: Actor, *args, **kwargs):
     planet = ctx.last_request
@@ -177,7 +184,7 @@ def planet_description(ctx: Context, actor: Actor, *args, **kwargs):
         description = oec.xpath(f'.//planet[name="{planet}"]/description')[0].text
         config.SPELLING_CORRECT = True
         question = speech_acts['another_search'][config.LANGUAGE]
-        return f'\n\n{description}\n\n{question}'
+        return f'\n\n{description}\n\n{question}\n'
     except:
         config.SPELLING_CORRECT = False
         response = speech_acts['spelling'][config.LANGUAGE]

@@ -36,8 +36,10 @@ if __name__ == "__main__":
     ctx = {}
     input("""\nHi, I help you search for exoplanets. 
 You can ask me things in English and German. For example, 'Which planets that were discovered before 2010 have a radius of at least 3 and a mass of at most 4', 
-'Welche Planeten, die vor 2010 entdeckt wurden, haben einen Radius von mindestens 3 und eine Masse von maximal 4'.
+'Show me 5 planets with a mass smaller than 2 and 3 planets that were discovered before 2010', 'Welche Planeten, die vor 2010 entdeckt wurden, haben einen Radius von 
+mindestens 3 und eine Masse von maximal 4', 'Zeig mir 5 Planeten mit einer Masser von maximal 2 und 3 Planeten, die vor 2010 entdeckt wurden.'
 The parameters that I understand are radius (de: 'radius'), mass (de: 'Masse'), age (de: 'Alter'), and discovered (de: 'entdeckt'). For more info on what the parameters mean visit:
+https://github.com/OpenExoplanetCatalogue/open_exoplanet_catalogue/
 
 Press an key to get started.
 
