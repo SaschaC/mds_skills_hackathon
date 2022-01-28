@@ -18,7 +18,7 @@ You can use the similar queries in German:
 
 You can run the python run_test.py to get some more examples of query types.
 
-The parameters that can be used in the queries are numeric and they are radius (de: 'radius'), mass (de: 'Masse'), age (de: 'Alter'), discovered (de: 'entdeckt'), and temperature (de: 'Temperatur'). For more info on what these parameters mean visit:
+The parameters that can be used in the queries are numeric and they are radius (de: 'radius'), mass (de: 'Masse'), age (de: 'Alter'), discovered (de: 'entdeckt'), and temperature (de: 'Temperatur'). Radius and mass are derived from Jupiter. Age is measured in Gyr (1 Billion years) and temperature in Calvin. For more info visit:
 [Exoplanet Catalogue](https://github.com/OpenExoplanetCatalogue/open_exoplanet_catalogue/)
 
 For each query result, the dialogue agent asks if you want get more details on a specific planet. You can then pick a planet to receive a brief summary of its interesting features.
