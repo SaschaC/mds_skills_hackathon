@@ -1,0 +1,3 @@
+PLANET_FOUND = False
+SPELLING_CORRECT = False
+LANGUAGE = 'en'
