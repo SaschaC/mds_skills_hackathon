@@ -23,6 +23,7 @@ def find_planets(query,gram):
         return('QueryError',0,0,0)
     if not trees:
         return('QueryError',0,0,0)
+    planet_names = []
     for i,t in enumerate(trees):
         answer = trees[i].label()['SEM']
         language = trees[i].label()['L']
@@ -31,9 +32,8 @@ def find_planets(query,gram):
         for tag in number_dict.keys():
             answer = re.sub(tag,number_dict[tag],answer)
         subqueries = answer.split(';')
-        planet_names = []
         if are_wellformed(subqueries):
-            
+            planet_names = []
             found = False
             try:
                 for q in subqueries:
@@ -48,10 +48,7 @@ def find_planets(query,gram):
                     continue
             except:
                 continue
-    if not planet_names:
-        return ('QueryError',0,0,0)
-    else:
-        return (planet_names,language,normalized_query,xml_queries)
+    return (0,language,normalized_query,xml_queries)
 
 def serialize(query):
     number_dict = dict()
@@ -94,26 +91,17 @@ def give_response(planet_names,query,language):
 def give_en_response(planet_names,query):
     if len(planet_names) == 1:
         if len(planet_names[0]) == 1:
-            config.PLANET_FOUND = True
             return f"I found the following {len(planet_names[0])} planet for the query '{query}':\n\n{', '.join(planet_names[0])}\n"
         elif len(planet_names[0]) > 1:
-            config.PLANET_FOUND = True
-            return f"I found the following {len(planet_names[0])} planets for the query '{query}':\n\n{', '.join(planet_names[0])}\n"
-            
-        else:
-            return f"I did not find any planet for the query '{query}'.\n"   
+            return f"I found the following {len(planet_names[0])} planets for the query '{query}':\n\n{', '.join(planet_names[0])}\n"   
     elif len(planet_names) > 1:
         response = ""
         for sqi,names in enumerate(planet_names):
             if len(names) == 1:
-                config.PLANET_FOUND = True
-                response += f"Here is 1 planet I found for part {sqi + 1} of the query '{query}':\n\n{names[0]}\n\n"
-                
+                response += f"Here is 1 planet I found for part {sqi + 1} of the query '{query}':\n\n{names[0]}\n\n"                
             elif len(names) > 1:
-                config.PLANET_FOUND = True
                 response += f"Here are {len(names)} planets I found for part {sqi + 1} of the query '{query}':\n\n{', '.join(names)}\n\n"
-                
-            else:
+            else: 
                 response += f"I did not find any planet for part {sqi + 1} of the query '{query}'.\n\n"
         return response
 
@@ -125,8 +113,6 @@ def give_de_response(planet_names,query):
         elif len(planet_names[0]) > 1:
             config.PLANET_FOUND = True
             return f"Ich habe die folgenden {len(planet_names[0])} Planeten gefunden für die Anfrage '{query}:'\n\n{', '.join(planet_names[0])}\n"
-        else:
-            return f"Ich habe keine Planeten gefunden für die Anfrage '{query}'\n"
     elif len(planet_names) > 1:
         response = ""
         for sqi,names in enumerate(planet_names):
@@ -135,8 +121,7 @@ def give_de_response(planet_names,query):
                 response += f"Hier ist 1 Planet, den ich für Teil {sqi + 1} der Anfrage '{query}' gefunden habe:\n\n{names[0]}\n\n"
             elif len(names) > 1:
                 config.PLANET_FOUND = True
-                response += f"Hier sind {len(names)} Planeten, die ich für Teil {sqi + 1} der Anfrage '{query}' gefunden habe:\n\n{', '.join(names)}\n\n"
-                
+                response += f"Hier sind {len(names)} Planeten, die ich für Teil {sqi + 1} der Anfrage '{query}' gefunden habe:\n\n{', '.join(names)}\n\n"           
             else: 
                 response += f"Ich habe keine Planeten für Teil {sqi + 1} der Anfrage '{query}' gefunden.\n\n"
         return response
@@ -151,7 +136,8 @@ speech_acts = {'another_search':{'de':'Möchtest du eine neue Suche starten?','e
 'more_info':{'de':'Möchtest du mehr über einen dieser Planeten erfahren?','en':'Would you like more info on one of these planets?'},
 'initiate':{'de':'Bitte gib deine Anfrage ein.','en':'Please enter your search query!'},
 'follow_up':{'de':'OK, über welchen Planeten?','en':'Alright, for which planet?'},
-'fail':{'de':'Oh, hier ist etwas schief gelaufen. Drücke eine Taste, um von Vorne zu beginnen.','en':'Oh, something went wrong. Press any key to start from the beginning.'}}
+'fail':{'de':'Oh, hier ist etwas schief gelaufen. Drücke eine Taste, um von Vorne zu beginnen.','en':'Oh, something went wrong. Press any key to start from the beginning.'},
+'not_found':{'de':'Ich habe keine Planeten gefunden für die Anfrage ','en':'I did not find any planet for the query '}}
 
 def fail(ctx: Context, actor: Actor, *args, **kwargs):
     return speech_acts['fail'][config.LANGUAGE]
@@ -176,12 +162,17 @@ def process_query(ctx: Context, actor: Actor, *args, **kwargs):
         question = question = speech_acts['another_search'][config.LANGUAGE]
         return f"\n\n{normalized_query}\n{xml_queries}\n\n{response} '{query}'. {question}\n"
     else:
-        response = give_response(planet_names,query,language)
-        if config.PLANET_FOUND:
+        if planet_names:
+            config.PLANET_FOUND = True
+            response = give_response(planet_names,query,language)
             question = speech_acts['more_info'][config.LANGUAGE]
+            return f'\n\n{normalized_query}\n{xml_queries}\n\n{response}\n{question}\n'
+
         else:
+            config.PLANET_FOUND = False
+            response = speech_acts['not_found'][config.LANGUAGE]
             question = speech_acts['another_search'][config.LANGUAGE]
-        return f'\n\n{normalized_query}\n{xml_queries}\n\n{response}\n{question}\n'
+            return f"\n\n{normalized_query}\n{xml_queries}\n\n{response}'{query}'\n\n{question}\n"
 
 def planet_description(ctx: Context, actor: Actor, *args, **kwargs):
     planet = ctx.last_request
