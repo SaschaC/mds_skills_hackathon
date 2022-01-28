@@ -2,7 +2,13 @@
 
 ## Description
 
-**dff-space-skill** can query a database of exoplanets with natural language queries in English and German. For example, you can ask: 
+**dff-space-skill** can query the [Exoplanet Catalogue](https://github.com/OpenExoplanetCatalogue/open_exoplanet_catalogue/) with natural language queries in English and German. The skill is based on a context-free feature grammar for English and German that parses the input queries and builds an query in Xpath format from them. 
+For each query result, the dialogue agent asks if you want get more details on a specific planet. You can then pick a planet to receive a brief summary of its interesting features.
+
+## Query Types
+
+You can provide queries such as:
+
 * 'What planets were discovered in 2020?'
 * 'Are there any planets with a radius smaller than 0.1?'
 
@@ -18,10 +24,10 @@ You can use the similar queries in German:
 
 You can run the python run_test.py to get some more examples of query types.
 
+# Query Parameters
+
 The parameters that can be used in the queries are numeric and they are radius (de: 'radius'), mass (de: 'Masse'), age (de: 'Alter'), discovered (de: 'entdeckt'), and temperature (de: 'Temperatur'). Radius and mass are derived from Jupiter. Age is measured in Gyr (1 Billion years) and temperature in Calvin. For more info visit:
 [Exoplanet Catalogue](https://github.com/OpenExoplanetCatalogue/open_exoplanet_catalogue/)
-
-For each query result, the dialogue agent asks if you want get more details on a specific planet. You can then pick a planet to receive a brief summary of its interesting features.
 
 ## Quickstart
 
