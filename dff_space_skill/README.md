@@ -2,7 +2,7 @@
 
 ## Description
 
-**dff-space-skill** can query the [Exoplanet Catalogue](https://github.com/OpenExoplanetCatalogue/open_exoplanet_catalogue/) with natural language queries in English and German. The skill is based on a context-free feature grammar for English and German that parses the input queries and builds an query in Xpath format from them. 
+**dff-space-skill** can query the [Exoplanet Catalogue](https://github.com/OpenExoplanetCatalogue/open_exoplanet_catalogue/) with natural language queries in English and German. The skill is based on a context-free feature grammar for English and German that parses the input queries and builds a query in Xpath format from them. 
 For each query result, the dialogue agent asks if you want get more details on a specific planet. You can then pick a planet to receive a brief summary of its interesting features.
 
 ## Query Types
