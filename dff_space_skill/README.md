@@ -26,7 +26,14 @@ You can run the python run_test.py to get some more examples of query types.
 
 # Query Parameters
 
-The parameters that can be used in the queries are numeric and they are radius (de: 'radius'), mass (de: 'Masse'), age (de: 'Alter'), discovered (de: 'entdeckt'), and temperature (de: 'Temperatur'). Radius and mass are derived from Jupiter. Age is measured in Gyr (1 Billion years) and temperature in Calvin. For more info visit:
+The parameters that can be used in the queries are numeric and they are:
+* `radius` (DE: `radius`) - Derived from the radius of Jupiter.
+* `mass` (DE: `masse`) - Derived from the mass of Jupiter.
+* `age` (DE: `alter`). - Measured in Gyr (1 Billion years).
+* `discovered` (DE: `entdeckt`) - The discovery year of the planet.
+* `temperature` (DE: `temperatur`) - Measured in Calvin. 
+
+For more info visit:
 [Exoplanet Catalogue](https://github.com/OpenExoplanetCatalogue/open_exoplanet_catalogue/)
 
 ## Quickstart
