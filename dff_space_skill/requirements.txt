@@ -1,2 +1,6 @@
 df_engine==0.8.1
 nltk==3.5
+lxml==4.7.1
+urllib3==1.25.8
+grpcio==1.41.1
+typing-extensions==3.10.0.2
