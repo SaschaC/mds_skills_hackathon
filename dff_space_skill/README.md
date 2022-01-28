@@ -36,6 +36,12 @@ The parameters that can be used in the queries are numeric and they are:
 For more info visit:
 [Exoplanet Catalogue](https://github.com/OpenExoplanetCatalogue/open_exoplanet_catalogue/)
 
+# Design
+
+The CFG parser builds feature trees that combine features into an Xpath query. Below an example of the query 'Show me 2 planets with an age of maximally 0.1 and 3 planets that have a radius of at least 1'
+
+![alt text](https://github.com/SaschaC/mds_skills_hackathon/blob/main/dff_space_skill/scenario/feature_tree.png)
+
 ## Quickstart
 
 ```bash
